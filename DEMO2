@@ -1,0 +1,829 @@
+Q1. Create an Employee Table and solve the following Queries in SQL
+Employee (emppi_id,emp_name,salary,join_date, dept_no)
+1. How to get distinct records from the table without using distinct keyword.
+2. Display the name of employees who have joined in 2016 and salary is greater than
+10000?
+3. Query to Find Second Highest Salary Of Employee using nested/ correlated queries?
+----------------------------------------------------------------------------------
+create database office
+use office
+create table employee(emppi_id int ,
+emp_name varchar(20),
+salary int,
+join_date date,
+dept_no int)
+
+insert into employee(emppi_id, emp_name,salary,join_date,dept_no)
+values(01,'Chinmay',40000,'2020-10-25',5),
+(02,'Aryan',35000,'2019-10-29',5),
+(01,'Gaurav',30000,'2020-04-25',3)
+
+select* from employee
+
+--1. How to get distinct records from the table without using distinct keyword.
+select emppi_id, emp_name, salary, join_date, dept_no
+from employee
+group by emppi_id, emp_name, salary, join_date, dept_no;
+
+--2. Display the name of employees who have joined in 2016 and salary is greater than 10,000.
+select emp_name --,salary,join_date
+from employee 
+where year(join_date)=2019
+and salary >10000;
+
+--3. Query to find the second-highest salary of employees using nested/correlated queries.
+select max(salary) as second_highest_salary
+from employee
+where salary<(select max(salary) from employee);
+
+
+
+
+
+
+----------------------------------------------------------------------------------
+Q2. Create an Employee Table and solve the following Queries in SQL
+Employee (emppi_id,emp_name,salary,join_date, dept_no)
+1. How to get 3 highest salaries records from Employee table?
+2. Find Query to get information of Employee where Employee is not assigned to the
+department
+3. Select all records from Employee table whose name is ‘Amit’ and ‘Pradnya’
+-----------------------------------------------------------------------------------
+create database office1
+use office1
+create table employee(emppi_id int ,
+emp_name varchar(20),
+salary int,
+join_date date,
+dept_no int)
+
+insert into employee(emppi_id, emp_name,salary,join_date,dept_no)
+values(01,'Chinmay',40000,'2020-10-25',5),
+(02,'Aryan',35000,'2019-10-29',5),
+(01,'Gaurav',30000,'2020-04-25',3)
+
+insert into employee(emppi_id, emp_name,salary,join_date,dept_no)
+values(01,'Harsh',50000,'2020-10-25',NULL),
+(02,'swastik',35000,'2019-10-29',4)
+
+insert into employee(emppi_id, emp_name,salary,join_date,dept_no)
+values(04,'Amit',20000,'2020-10-25',2),
+(05,'Pradnya',35000,'2018-11-29',4)
+
+
+
+--1. How to get 3 highest salaries records from Employee table?
+select top 3 emppi_id,emp_name,salary
+from employee
+order by salary desc
+
+--2. Find query to get information of employees where the employee is not assigned to any department.
+select*
+from employee
+where dept_no is NULL
+
+--3. Select all records from the Employee table whose names are 'Amit' and 'Pradnya'.
+select* 
+from employee
+where emp_name in ('Amit','Pradnya')
+
+
+
+
+
+
+
+-------------------------------------------------------------------------------------
+Q3. Consider the following tables EMP and SALGRADE, write the query for the following
+
+1. To display details of all employee in descending order of their DOJ
+2. To display NAME AND DESIG of those employees whose sgrade is either “S02”
+or “S03”.
+3. To display NAME, DESIG, SGRADE of those employee who joined in the year 2009
+4. To display all SGRADE, ANNUAL_SALARY from table
+SALGRADE [where ANNUAL_SALARY = SALARY*12]
+5. To display number of employee working in each SALGRADE from table EMPLOYEE
+------------------------------------------------------------------------------------
+create database office2
+use office2
+
+create table employee(ecode int,
+name varchar(30),
+desig varchar(20),
+sgrade varchar(5),
+doj date,
+dob date);
+
+create table salgrade(sgrade varchar(5),
+salary int,
+hra int)
+
+insert into employee(ecode,name,desig,sgrade,doj,dob)
+values(101, 'Vikrant', 'Executive', 'S03', '2003-03-23', '1980-01-13'),
+(102, 'Ravi', 'Head-IT', 'S02', '2010-02-12', '1987-07-22'),
+(103, 'John Cena', 'Receptionist', 'S03', '2009-06-24', '1983-02-24'),
+(105, 'Azhar Ansari', 'GM', 'S02', '2009-08-11', '1984-03-03'),
+(108, 'Priyam Sen', 'CEO', 'S01', '2004-12-29', '1982-01-19');
+
+insert into salgrade(sgrade, salary, hra)
+values('S01', 56000, 18000),
+('S02', 32000, 12000),
+('S03', 24000, 8000);
+
+--1. To display details of all employee in descending order of their DOJ
+select*
+from employee
+order by doj desc
+
+--2. To display NAME AND DESIG of those employees whose sgrade is either “S02” or “S03”.
+select name, desig
+from employee
+where sgrade in ('S02','S03')
+
+--3. To display NAME, DESIG, SGRADE of those employee who joined in the year 2009
+select name,desig,sgrade
+from employee 
+where year(doj) = 2009
+
+--4. To display all SGRADE, ANNUAL_SALARY from table SALGRADE [where ANNUAL_SALARY = SALARY*12]
+select sgrade,salary*12 as annual_salary
+from salgrade
+
+--5. To display number of employee working in each SALGRADE from table EMPLOYEE
+select sgrade, count(*) as NumberOfEmployees
+from employee
+group by sgrade
+
+
+
+
+
+
+-------------------------------------------------------------------------------------
+Q4. For a given EMPLOYEE table
+
+Perform the Following -
+1) Creating Views,
+2) Selecting from a View
+3) Dropping Views
+-------------------------------------------------------------------------------------
+create database office03
+use office03
+
+create table employee(FNAME VARCHAR(30),
+MINIT CHAR(1),
+LNAME VARCHAR(20),
+SSN INT,
+BDATE DATE,
+ADDRESS VARCHAR(100),
+SEX CHAR(1),
+SALARY INT,
+SUPERSSN INT,
+DNO INT)
+
+INSERT INTO EMPLOYEE(FNAME,MINIT,LNAME,SSN,BDATE,ADDRESS,SEX,SALARY,SUPERSSN,DNO)
+VALUES('John', 'B', 'Smith', '123456789', '1965-01-09', '731 Fondren, Houston, TX', 'M', 30000, '333445555', 5),
+('Franklin', 'T', 'Wong', '333445555', '1955-12-08', '638 Voss, Houston, TX', 'M', 40000, '888665555', 5),
+('Alicia', 'J', 'Zelaya', '999887777', '1968-07-19', '3321 Castle, Spring, TX', 'F', 25000, '987654321', 4),
+('Jennifer', 'S', 'Wallace', '987654321', '1941-06-20', '291 Berry, Bellaire, TX', 'F', 43000, '888665555', 4),
+('Ramesh', 'K', 'Narayan', '666884444', '1962-09-15', '975 Fire Oak, Humble, TX', 'M', 38000, '333445555', 5),
+('Joyce', 'A', 'Englehn', '453453453', '1972-07-31', '5631 Rice, Houston, TX', 'F', 25000, '333445555', 5),
+('Ahmad', 'V', 'Jabbar', '987987987', '1969-03-29', '980 Dallas, Houston, TX', 'M', 25000, '987654321', 4),
+('James', 'E', 'Borg', '888665555', '1937-11-10', '450 Stone, Houston, TX', 'M', 55000, NULL, 1);
+
+--CREATING VIEWS
+CREATE VIEW DEPT5_EMPLOYEES AS
+SELECT FNAME,LNAME,SSN,SALARY,DNO
+FROM EMPLOYEE
+WHERE DNO=5
+
+--SELECTING FROM VIEW
+SELECT* FROM DEPT5_EMPLOYEES
+
+--DROPPING VIEW
+DROP VIEW DEPT5_EMPLOYEES
+
+
+
+
+
+
+-------------------------------------------------------------------------------------
+Q5. Consider the following tables and perform joining queries
+
+"Unit_dose_orders" table
+
+"patients" table
+
+1. Perform inner join.
+SELECT * FROM patients p JOIN admissions a ON a.patient_id = p.patient_id
+-------------------------------------------------------------------------------------
+CREATE DATABASE MEDICAL
+USE MEDICAL
+
+CREATE TABLE UNIT_DOSE_ORDERS(UNIT_DOSE_ORDER_ID INT,
+PATIENT_ID INT,
+DOSAGE VARCHAR(20));
+
+CREATE TABLE PATIENTS(PATIENT_ID INT, 
+FIRST_NAME VARCHAR(20),
+LAST_NAME VARCHAR(20))
+
+INSERT INTO UNIT_DOSE_ORDERS(UNIT_DOSE_ORDER_ID,PATIENT_ID,DOSAGE)
+VALUES (1,9,'0.25 MG'),
+(2,15,'50 MG'),
+(3,18,'15 MG')
+
+INSERT INTO PATIENTS(PATIENT_ID,FIRST_NAME,LAST_NAME)
+VALUES(1, 'Miyuki', 'Riviera'),
+(2, 'Deunan', 'Knute'),
+(3, 'Lois', 'McAllister');
+
+--JOIN
+SELECT P.PATIENT_ID, P.FIRST_NAME,P.LAST_NAME,U.UNIT_DOSE_ORDER_ID,U.DOSAGE
+FROM PATIENTS P
+JOIN UNIT_DOSE_ORDERS U
+ON P.PATIENT_ID =U.UNIT_DOSE_ORDER_ID
+
+
+
+
+
+
+
+------------------------------------------------------------------------------------
+Q6. Briefly answer the following questions based on this schema:
+Emp(eid: integer, ename: string, age: integer, salary: real)
+Works(eid: integer, did: integer, pct time: integer)
+Dept(did: integer, budget: real, managerid: integer)
+1. Give an example of a view on Emp that could be automatically updated by updating
+Emp.
+2. Give an example of a view on Emp that would be impossible to update (automatically)
+and explain why your example presents the update problem that it does
+-------------------------------------------------------------------------------------
+
+CREATE DATABASE Company;
+USE Company;
+
+CREATE TABLE Emp (
+    eid INT PRIMARY KEY,
+    ename VARCHAR(50),
+    age INT,
+    salary DECIMAL(10, 2)
+);
+
+CREATE TABLE Works (
+    eid INT,
+    did INT,
+    pct_time INT,
+    FOREIGN KEY (eid) REFERENCES Emp(eid)
+);
+
+-- Create the Dept table
+CREATE TABLE Dept (
+    did INT PRIMARY KEY,
+    budget DECIMAL(10, 2),
+    managerid INT,
+    FOREIGN KEY (managerid) REFERENCES Emp(eid)
+);
+
+-- Create an automatically updatable view on Emp
+CREATE VIEW EmployeeOverview AS
+SELECT eid, ename, age
+FROM Emp;
+SELECT*FROM EmployeeOverview
+
+
+CREATE VIEW EmployeeSalarySummary AS
+SELECT eid, ename, salary, salary * 0.1 AS bonus
+FROM Emp;
+SELECT *FROM EmployeeSalarySummary
+
+INSERT INTO Emp (eid, ename, age, salary) VALUES
+(1, 'Alice', 30, 60000.00),
+(2, 'Bob', 40, 70000.00),
+(3, 'Charlie', 25, 50000.00);
+
+INSERT INTO Works (eid, did, pct_time) VALUES
+(1, 101, 100),
+(2, 102, 50),
+(3, 101, 75);
+
+INSERT INTO Dept (did, budget, managerid) VALUES
+(101, 200000.00, 1),
+(102, 150000.00, 2);
+
+
+
+
+
+
+---------------------------------------------------------------------------------
+Q7.Exercise 5.1 Consider the following relations:
+Student(snum: integer, sname: string, major: string, level: string, age: integer)
+Class(name: string, meets_at: string, room: string, fid: integer)
+Enrolled(snum: integer, cname: string)
+Faculty(fid: integer, fname: string, deptid: integer)
+
+The meaning of these relations is straightforward; for example, Enrolled has one record
+per student-class pair such that the student is enrolled in the class.
+Write the following queries in SQL. No duplicates should be printed in any of the
+answers.
+--------------------------------------------------------------------------------
+-- Create the database
+CREATE DATABASE University1;
+
+-- Use the new database
+USE University1;
+
+-- Create 'Student' table
+CREATE TABLE Student (
+    snum INT PRIMARY KEY,
+    sname VARCHAR(100),
+    major VARCHAR(100),
+    level VARCHAR(2),
+    age INT
+);
+
+-- Create 'Class' table
+CREATE TABLE Class (
+    name VARCHAR(100),
+    meets_at VARCHAR(100),
+    room VARCHAR(10),
+    fid INT,
+    PRIMARY KEY (name)
+);
+
+-- Create 'Enrolled' table
+CREATE TABLE Enrolled (
+    snum INT,
+    cname VARCHAR(100),
+    PRIMARY KEY (snum, cname),
+    FOREIGN KEY (snum) REFERENCES Student(snum),
+    FOREIGN KEY (cname) REFERENCES Class(name)
+);
+
+-- Create 'Faculty' table
+CREATE TABLE Faculty (
+    fid INT PRIMARY KEY,
+    fname VARCHAR(100),
+    deptid INT
+);
+
+-- Insert sample data into 'Student'
+INSERT INTO Student (snum, sname, major, level, age)
+VALUES
+(1, 'Alice', 'History', 'JR', 20),
+(2, 'Bob', 'Computer Science', 'SR', 22),
+(3, 'Charlie', 'History', 'SO', 19),
+(4, 'David', 'Math', 'JR', 21),
+(5, 'Eve', 'History', 'SR', 22);
+
+-- Insert sample data into 'Faculty'
+INSERT INTO Faculty (fid, fname, deptid)
+VALUES
+(1, 'I. Teach', 10),
+(2, 'J. Professor', 20),
+(3, 'K. Lecturer', 30);
+
+-- Insert sample data into 'Class'
+INSERT INTO Class (name, meets_at, room, fid)
+VALUES
+('CS101', 'MWF 9:00', 'R128', 1),
+('CS102', 'MWF 10:00', 'R128', 1),
+('HIS101', 'MWF 9:00', 'R128', 2),
+('MTH101', 'MWF 11:00', 'R130', 3);
+
+-- Insert sample data into 'Enrolled'
+INSERT INTO Enrolled (snum, cname)
+VALUES
+(1, 'CS101'),
+(2, 'CS101'),
+(3, 'HIS101'),
+(4, 'MTH101'),
+(5, 'HIS101'),
+(1, 'CS102');
+
+
+--1.Find the names of all Juniors (level = JR) who are enrolled in a class taught by I. Teach
+SELECT DISTINCT s.sname
+FROM Student s
+JOIN Enrolled e ON s.snum = e.snum
+JOIN Class c ON e.cname = c.name
+JOIN Faculty f ON c.fid = f.fid
+WHERE s.level = 'JR' AND f.fname = 'I. Teach';
+
+--2. Find the age of the oldest student who is either a History major or enrolled in a course taught by I. Teach.
+SELECT MAX(s.age)
+FROM Student s
+LEFT JOIN Enrolled e ON s.snum = e.snum
+LEFT JOIN Class c ON e.cname = c.name
+LEFT JOIN Faculty f ON c.fid = f.fid
+WHERE s.major = 'History' OR f.fname = 'I. Teach';
+
+--3.Find the names of all classes that either meet in room R128 or have five or more students enrolled.
+SELECT c.name
+FROM Class c
+LEFT JOIN Enrolled e ON c.name = e.cname
+GROUP BY c.name, c.room
+HAVING c.room = 'R128' OR COUNT(e.snum) >= 5;
+
+--4. Find the names of all students who are enrolled in two classes that meet at the same time.
+SELECT DISTINCT s.sname
+FROM Student s
+JOIN Enrolled e1 ON s.snum = e1.snum
+JOIN Class c1 ON e1.cname = c1.name
+JOIN Enrolled e2 ON s.snum = e2.snum
+JOIN Class c2 ON e2.cname = c2.name
+WHERE c1.meets_at = c2.meets_at AND e1.cname != e2.cname;
+
+--5.Find the names of faculty members who teach in every room in which some class is taught.
+SELECT f.fname
+FROM Faculty f
+JOIN Class c ON f.fid = c.fid
+GROUP BY f.fname
+HAVING COUNT(DISTINCT c.room) = (SELECT COUNT(DISTINCT room) FROM Class);
+
+--6. Find the names of faculty members for whom the combined enrollment of the courses that they teach is less than five.
+SELECT f.fname
+FROM Faculty f
+JOIN Class c ON f.fid = c.fid
+LEFT JOIN Enrolled e ON c.name = e.cname
+GROUP BY f.fname
+HAVING COUNT(e.snum) < 5;
+
+--7. For each level, print the level and the average age of students for that level.
+SELECT level, AVG(age) AS avg_age
+FROM Student
+GROUP BY level;
+
+--8. For all levels except JR, print the level and the average age of students for that level.
+SELECT level, AVG(age) AS avg_age
+FROM Student
+WHERE level != 'JR'
+GROUP BY level;
+
+--9. For each faculty member that has taught classes only in room R128, print the faculty member's name and the total number of classes he or she has taught.
+SELECT f.fname, COUNT(c.name) AS total_classes
+FROM Faculty f
+JOIN Class c ON f.fid = c.fid
+WHERE c.room = 'R128'
+GROUP BY f.fname
+HAVING COUNT(DISTINCT c.room) = 1;
+
+--10.Find the names of students enrolled in the maximum number of classes.
+SELECT s.sname
+FROM Student s
+JOIN Enrolled e ON s.snum = e.snum
+GROUP BY s.sname
+HAVING COUNT(e.cname) = (
+    SELECT MAX(class_count)
+    FROM (SELECT COUNT(cname) AS class_count FROM Enrolled GROUP BY snum) AS Subquery
+);
+
+--11. Find the names of students not enrolled in any class.
+SELECT s.sname
+FROM Student s
+LEFT JOIN Enrolled e ON s.snum = e.snum
+WHERE e.snum IS NULL;
+
+--12. For each age value that appears in Students, find the level value that appears most often.
+SELECT age, level
+FROM Student s
+GROUP BY age, level
+HAVING level = (
+    SELECT TOP 1 level
+    FROM Student s2
+    WHERE s2.age = s.age
+    GROUP BY s2.level
+    ORDER BY COUNT(*) DESC
+);
+
+
+
+
+
+
+
+
+----------------------------------------------------------------------------------
+ Q8. Consider the following tables for Library Management System.
+ 1. List the books where page count bigger than 200
+ 2. List the books where pageCount is between 100 and 200
+ 3. List the boys from class 11a or 11b
+ 4. List the students from class 11a or 11b
+ 5. List the book which have biggest page count
+ 6. List only the number of female students in each class.
+ 7. List all students name, surname, the name of the taken book,the taken date and the book’s
+ type
+----------------------------------------------------------------------------------
+CREATE DATABASE LIBRARY
+USE LIBRARY
+
+-- Create 'students' table
+CREATE TABLE students (
+    studentId INTEGER PRIMARY KEY,
+    name TEXT NOT NULL,
+    surname TEXT NOT NULL,
+    birthdate TEXT,
+    gender TEXT,
+    class TEXT,
+    point INTEGER
+);
+
+-- Create 'authors' table
+CREATE TABLE authors (
+    authorId INTEGER PRIMARY KEY,
+    name TEXT NOT NULL,
+    surname TEXT NOT NULL
+);
+
+-- Create 'types' table
+CREATE TABLE types (
+    typeId INTEGER PRIMARY KEY,
+    name TEXT NOT NULL
+);
+
+-- Create 'books' table
+CREATE TABLE books (
+    bookId INTEGER PRIMARY KEY,
+    name TEXT NOT NULL,
+    pagecount INTEGER,
+    point INTEGER,
+    authorId INTEGER,
+    typeId INTEGER,
+    FOREIGN KEY (authorId) REFERENCES authors (authorId),
+    FOREIGN KEY (typeId) REFERENCES types (typeId)
+);
+
+-- Create 'borrows' table
+CREATE TABLE borrows (
+    borrowId INTEGER PRIMARY KEY,
+    studentId INTEGER,
+    bookId INTEGER,
+    takenDate TEXT,
+    broughtDate TEXT,
+    FOREIGN KEY (studentId) REFERENCES students (studentId),
+    FOREIGN KEY (bookId) REFERENCES books (bookId)
+);
+
+
+--1. List the books where page count is bigger than 200:
+SELECT name FROM books
+WHERE pagecount > 200;
+
+--2. List the books where page count is between 100 and 200:
+SELECT name FROM books
+WHERE pagecount BETWEEN 100 AND 200;
+
+--3. List the boys from class 11a or 11b:
+SELECT name, surname FROM students
+WHERE class IN ('11a', '11b') AND gender = 'Male';
+
+--4. List the students from class 11a or 11b:
+SELECT name, surname FROM students
+WHERE class IN ('11a', '11b');
+
+--5. List the book with the biggest page count:
+SELECT name FROM books
+ORDER BY pagecount DESC
+LIMIT 1;
+
+--6. List only the number of female students in each class:
+SELECT class, COUNT(*) AS female_count 
+FROM students 
+WHERE UPPER(gender) = 'FEMALE' 
+GROUP BY class;
+
+
+
+--7. List all students' names, surnames, the name of the taken book, the taken date, and the book’s type:
+SELECT s.name, s.surname, b.name AS book_name, br.takenDate, t.name AS book_type
+FROM students s
+JOIN borrows br ON s.studentId = br.studentId
+JOIN books b ON br.bookId = b.bookId
+JOIN types t ON b.typeId = t.typeId;
+
+
+
+
+----------------------------------------------------------------------------------
+Q9.Create a Table as workers and the details arePerform the following:
+Alter the table by adding a column Salary
+Alter the table by modifying the column Name
+.
+Describe the table employee
+Copy the table employee as emp
+Truncate the table
+.
+Delete the Second row from the table
+--------------------------------------------------------------------------------
+CREATE DATABASE DB
+USE DB
+
+CREATE TABLE workers (
+    SNo INT PRIMARY KEY,
+    Name VARCHAR(100),
+    Designation VARCHAR(50),
+    Branch VARCHAR(50)
+);
+
+CREATE TABLE employee (
+    EmpID INT PRIMARY KEY,
+    EmpName VARCHAR(100),
+    Department VARCHAR(50),
+    Salary DECIMAL(10, 2)
+);
+
+INSERT INTO employee (EmpID, EmpName, Department, Salary)
+VALUES
+(1, 'John Doe', 'IT', 5000),
+(2, 'Jane Smith', 'HR', 4500),
+(3, 'Sam Brown', 'Finance', 4800);
+
+-- Insert sample data into employee table
+INSERT INTO employee (EmpID, EmpName, Department, Salary)
+VALUES
+(1, 'John Doe', 'IT', 5000),
+(2, 'Jane Smith', 'HR', 4500),
+(3, 'Sam Brown', 'Finance', 4800);
+
+-- Insert data into workers table
+INSERT INTO workers (SNo, Name, Designation, Branch)
+VALUES 
+(1, 'Ram', 'Manager', 'Chennai'),
+(2, 'Santhosh', 'Supervisor', 'Madurai'),
+(3, 'Hari', 'Assistant', 'Trichy');
+
+--1.Alter the table by adding a column Salary
+ALTER TABLE workers
+ADD Salary DECIMAL(10, 2);
+
+-- Alter the table to modify the Name column (e.g., to increase its size)
+ALTER TABLE workers
+ALTER COLUMN Name VARCHAR(150);
+
+-- Use the system procedure to describe the structure of the table 'employee'
+EXEC sp_columns 'employee';
+
+-- Create a new table 'emp' with the structure and data of 'employee'
+SELECT * INTO emp
+FROM employee;
+
+-- Truncate the table workers
+TRUNCATE TABLE workers;
+
+-- Delete the second row from the table workers
+DELETE FROM workers
+WHERE SNo = 2;
+
+
+
+
+
+---------------------------------------------------------------------------------
+Q10. Consider the following
+ 1. From the following table, write a SQL query to find out who was cast in the movie '3
+ Idiots'
+ 2. Write a SQL query to find out which actors have not appeared in any movies between
+ 1990 and 2000 
+---------------------------------------------------------------------------------
+CREATE DATABASE MovieDB;
+USE MovieDB;
+
+CREATE TABLE actor (
+    act_id INT PRIMARY KEY,
+    act_fname CHAR(20),
+    act_lname CHAR(20),
+    act_gender CHAR(1)
+);
+CREATE TABLE movie (
+    mov_id INT PRIMARY KEY,
+    mov_title CHAR(50),
+    mov_year INT,
+    mov_time INT,
+    mov_lang CHAR(50),
+    mov_dt_rel DATE,
+    mov_rel_country CHAR(5)
+);
+CREATE TABLE movie_cast (
+    act_id INT,
+    mov_id INT,
+    role CHAR(30),
+    PRIMARY KEY (act_id, mov_id),
+    FOREIGN KEY (act_id) REFERENCES actor(act_id),
+    FOREIGN KEY (mov_id) REFERENCES movie(mov_id)
+);
+CREATE TABLE director (
+    dir_id INT PRIMARY KEY,
+    dir_fname CHAR(20),
+    dir_lname CHAR(20)
+);
+CREATE TABLE movie_genres (
+    mov_id INT,
+    gen_id INT,
+    PRIMARY KEY (mov_id, gen_id),
+    FOREIGN KEY (mov_id) REFERENCES movie(mov_id),
+    FOREIGN KEY (gen_id) REFERENCES genres(gen_id)
+);
+CREATE TABLE genres (
+    gen_id INT PRIMARY KEY,
+    gen_title CHAR(20)
+);
+CREATE TABLE movie_direction (
+    dir_id INT,
+    mov_id INT,
+    PRIMARY KEY (dir_id, mov_id),
+    FOREIGN KEY (dir_id) REFERENCES director(dir_id),
+    FOREIGN KEY (mov_id) REFERENCES movie(mov_id)
+);
+CREATE TABLE rating (
+    mov_id INT,
+    rev_id INT,
+    rev_stars INT,
+    num_o_ratings INT,
+    PRIMARY KEY (mov_id, rev_id),
+    FOREIGN KEY (mov_id) REFERENCES movie(mov_id)
+);
+CREATE TABLE reviewer (
+    rev_id INT PRIMARY KEY,
+    rev_name CHAR(30)
+);
+
+
+INSERT INTO actor (act_id, act_fname, act_lname, act_gender) 
+VALUES 
+(1, 'Aamir', 'Khan', 'M'),
+(2, 'Sharman', 'Joshi', 'M'),
+(3, 'Kareena', 'Kapoor', 'F'),
+(4, 'Madhavan', 'R.', 'M'),
+(5, 'Boman', 'Irani', 'M');
+INSERT INTO movie (mov_id, mov_title, mov_year, mov_time, mov_lang, mov_dt_rel, mov_rel_country) 
+VALUES 
+(1, '3 Idiots', 2009, 170, 'Hindi', '2009-12-25', 'IN'),
+(2, 'Lagaan', 2001, 224, 'Hindi', '2001-06-15', 'IN'),
+(3, 'PK', 2014, 153, 'Hindi', '2014-12-19', 'IN');
+INSERT INTO movie_cast (act_id, mov_id, role) 
+VALUES 
+(1, 1, 'Rancho'),
+(2, 1, 'Raju'),
+(4, 1, 'Farhan'),
+(5, 1, 'Viru Sahastrabuddhe'),
+(3, 1, 'Pia'),
+(1, 2, 'Bhuvan'),
+(1, 3, 'PK');
+INSERT INTO director (dir_id, dir_fname, dir_lname) 
+VALUES 
+(1, 'Rajkumar', 'Hirani'),
+(2, 'Ashutosh', 'Gowariker');
+INSERT INTO genres (gen_id, gen_title) 
+VALUES 
+(1, 'Comedy'),
+(2, 'Drama'),
+(3, 'Romance'),
+(4, 'Sci-Fi');
+
+INSERT INTO movie_genres (mov_id, gen_id) 
+VALUES 
+(1, 1), -- 3 Idiots - Comedy
+(1, 2), -- 3 Idiots - Drama
+(2, 2), -- Lagaan - Drama
+(3, 1), -- PK - Comedy
+(3, 4); -- PK - Sci-Fi
+INSERT INTO movie_direction (dir_id, mov_id) 
+VALUES 
+(1, 1), -- 3 Idiots directed by Rajkumar Hirani
+(1, 3), -- PK directed by Rajkumar Hirani
+(2, 2); -- Lagaan directed by Ashutosh Gowariker
+INSERT INTO reviewer (rev_id, rev_name) 
+VALUES 
+(1, 'Times of India'),
+(2, 'Indian Express'),
+(3, 'NDTV');
+
+INSERT INTO rating (mov_id, rev_id, rev_stars, num_o_ratings) 
+VALUES 
+(1, 1, 5, 100),
+(1, 2, 4, 150),
+(1, 3, 4, 200),
+(2, 1, 5, 300),
+(3, 2, 4, 120);
+
+--Find out who was cast in the movie '3 Idiots':
+SELECT a.act_fname, a.act_lname
+FROM movie m
+JOIN movie_cast mc ON m.mov_id = mc.mov_id
+JOIN actor a ON mc.act_id = a.act_id
+WHERE m.mov_title = '3 Idiots';
+
+--Find out which actors have not appeared in any movies between 1990 and 2000:
+SELECT a.act_fname, a.act_lname
+FROM actor a
+WHERE a.act_id NOT IN (
+    SELECT mc.act_id
+    FROM movie m
+    JOIN movie_cast mc ON m.mov_id = mc.mov_id
+    WHERE m.mov_year BETWEEN 1990 AND 2000
+);
+
+
